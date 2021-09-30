@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    .container {
+      width: 90%;
+      margin: 0 auto;
+    }
+    h3 {
+      background-color: #dbafa0;
+      padding: 10px;
+    }
+    button {
+      background-color: #dbafa0;
+      padding: 10px;
+      border: none;
+      box-shadow: 5px 5px;
+    }
+    input {
+      padding: 10px;
+      border: none;
+    }
+  </style>
+  <title>vue_rendering</title>
+</head>
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  
+  <h3>インスタンスを複数作成する</h3>
+  <!-- Vueインスタンスは複数作成できるが、非推奨 -->
+  <div id="app1">
+    <p>{{ message }}</p>
+  </div>
+  
+  <div id="app2">
+    <p>{{ message }}</p>
+    <button @click="changeMessage1">インスタンスのmessageを変更</button>
+  </div>
+  
+  <script>
+    // インスタンスを変数に代入することで、他のインスタンスからアクセスできるようになる。
+    var vm1 = new Vue({
+      el: '#app1',
+      data: {
+        message: 'インスタンス１',
+      }
+    })
+    
+    var vm2 = new Vue({
+      el: '#app2',
+      data: {
+        message: 'インスタンス２',
+      },
+      methods: {
+        changeMessage1() {
+          vm1.message = 'インスタンス２から変えました。'
+        }
+      }
+    })
+    
+  </script>
+</body>
+</html>
