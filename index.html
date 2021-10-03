@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    .container {
+      width: 90%;
+      margin: 0 auto;
+    }
+    h3 {
+      background-color: #dbafa0;
+      padding: 10px;
+    }
+    button {
+      background-color: #dbafa0;
+      padding: 10px;
+      border: none;
+      box-shadow: 5px 5px;
+    }
+    input {
+      padding: 10px;
+      border: none;
+    }
+    </style>
+  <title>vue_rendering</title>
+</head>
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  
+  <h3>インスタンスを複数作成する</h3>
+  <!-- Vueインスタンスは複数作成できるが、非推奨 -->
+  <div id="app">
+    <p>{{ message }}</p>
+    <p>{{ name }}</p>
+    <p>{{ myData }}</p>
+    <!-- Vue.componentで登録したコンポーネントは何度も使える -->
+    <hello></hello>
+    <hello></hello>
+    <hello></hello>
+    <button @click="message = 'ボタンから変更'">変更</button>
+  </div>
+  
+  <div id="app2"></div>
+  
+  <div id="app3"></div>
+  
+  <h3>Vueのライフサイクル</h3>
+  <div id="app4">
+    <h1>こんにちは、{{ name }}</h1>
+    <button @click="name='太郎さん'">名前を変更</button>
+    <button @click="destroy">インスタンスを破壊</button>
+    <!-- Vue.componentで登録したコンポーネントは何度も使える -->
+    <hello></hello>
+    <hello></hello>
+    <hello></hello>
+  </div>
+  
+  <h3>インスタンスを使い回す</h3>
+  <!-- インスタンス内で定義したtemplateは最初の要素のみ描画される -->
+  <div class="hello"></div>
+  <div class="hello"></div>
+  <div class="hello"></div>
+  
+  <!-- インスタンス内で定義したtemplateは最初の要素のみ描画される -->
+  <hello></hello>
+  <hello></hello>
+  <hello></hello>
+
+  <script>
+
+    var data = {
+        message: 'こんにちは',
+        name: 'よしぴー',
+    }
+
+    // コンポーネントの登録
+    Vue.component('hello', {
+      template: '<p>こんにちは</p>'
+    })
+    // インスタンスを変数に代入することで、他のインスタンスからアクセスできるようになる。
+    var vm = new Vue({
+      data: data,
+      computed: {
+        myData: function() {
+          return this.$data;
+        }
+      }
+    })
+
+    vm.$mount('#app')
+
+    new Vue({
+      data: {
+        name: 'よしぴー',
+      },
+      template: '<h1>こんにちは、{{ name }}</h1>'
+    }).$mount('#app2')
+
+
+    new Vue({
+      data: {
+        name: 'よしぴー',
+      },
+      // 仮想DOMによって生成(描画速度が速い)
+      render: function(h) {
+        console.log(h('h1', 'こんにちは' + this.name));
+        return h('h1', 'こんにちは' + this.name);
+      },
+    }).$mount('#app3')
+
+    new Vue({
+      el: '#app4',
+      data: {
+        name: 'よしぴー',
+      },
+      beforeCreate: function() {
+        console.log('beforeCreate')
+      },
+      reated: function() {
+        console.log('created')
+      },
+      beforeMount: function() {
+        console.log('beforeMount')
+      },
+      mounted: function() {
+        console.log('mounted')
+      },
+      beforeUpdate: function() {
+        console.log('beforeUpdate')
+      },
+      updated: function() {
+        console.log('updated')
+      },
+      beforeDestroy: function() {
+        console.log('beforeDstroy')
+      },
+      destroyed: function() {
+        console.log('destroyed')
+      },
+      methods: {
+        destroy() {
+          this.$destroy()
+        }
+      }
+    }).$mount('#app4')
+
+    new Vue({
+      el: '.hello',
+      template: '<p>こんにちは</p>',
+    })
+    
+  </script>
+</body>
+</html>
